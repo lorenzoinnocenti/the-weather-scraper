@@ -22,7 +22,7 @@ class ConvertToSystem:
                 return fahrenheit
 
         except Exception as e:
-            print(f'{e}! probably caused by an empty row in the data')
+            #print(f'{e}! probably caused by an empty row in the data')
             return 'NA'
             
     def dew_point(self, dew_point_string: str):
@@ -35,7 +35,7 @@ class ConvertToSystem:
                 return fahrenheit
             
         except Exception as e:
-            print(f'{e}! probably caused by an empty row in the data')
+            #print(f'{e}! probably caused by an empty row in the data')
             return 'NA'
 
     def humidity(self, humidity_string: str):
@@ -44,7 +44,7 @@ class ConvertToSystem:
             return humidity
         
         except Exception as e:
-            print(f'{e}! probably caused by an empty row in the data')
+            #print(f'{e}! probably caused by an empty row in the data')
             return 'NA'
 
     def speed(self, speed_string: str):
@@ -57,7 +57,7 @@ class ConvertToSystem:
                 return mph
 
         except Exception as e:
-            print(f'{e}! probably caused by an empty row in the data')
+            #print(f'{e}! probably caused by an empty row in the data')
             return 'NA'
 
     def pressure(self, pressure_string: str):
@@ -70,7 +70,7 @@ class ConvertToSystem:
                 return inhg
                 
         except Exception as e:
-            print(f'{e}! probably caused by an empty row in the data')
+            #print(f'{e}! probably caused by an empty row in the data')
             return 'NA'
     
     def precipitation(self, precip_string: str):
@@ -83,7 +83,7 @@ class ConvertToSystem:
                 return inches
                 
         except Exception as e:
-            print(f'{e}! probably caused by an empty row in the data')
+            #print(f'{e}! probably caused by an empty row in the data')
             return 'NA'
 
     def uv(self, uv_string: str):
@@ -92,7 +92,7 @@ class ConvertToSystem:
             return measure
             
         except Exception as e:
-            print(f'{e}! probably caused by an empty row in the data')
+            #print(f'{e}! probably caused by an empty row in the data')
             return 'NA'
 
     def solar(self, solar_string: str):
@@ -101,7 +101,7 @@ class ConvertToSystem:
             return measure
             
         except Exception as e:
-            print(f'{e}! probably caused by an empty row in the data')
+            #print(f'{e}! probably caused by an empty row in the data')
             return 'NA'
 
     def clean_and_convert(self, dict_list: list):

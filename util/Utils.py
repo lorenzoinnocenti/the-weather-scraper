@@ -2,6 +2,7 @@ import config
 from datetime import timedelta, date
 import lxml.html as lh
 import requests
+from dateutil.relativedelta import relativedelta
 
 
 class Utils:
@@ -23,7 +24,12 @@ class Utils:
         for date in date_range:
             date_string = date.strftime("%Y-%m-%d")
             url = f'{weather_station_url}/table/{date_string}/{date_string}/daily'
-            yield date_string, url
+            yield date_string, url  
+            
+    @classmethod
+    def url_formatter(cls, weather_station_url):
+        url = f'{weather_station_url}'
+        return url
     
     @classmethod
     def date_url_array(cls, date_url_gen):

@@ -1,10 +1,7 @@
-# Made with love by Karl
-# Contact me on Telegram: @karlpy
-
 import requests
 import csv
 import lxml.html as lh
-
+import time
 import config
 
 from util.UnitConverter import ConvertToSystem
@@ -22,27 +19,30 @@ END_DATE = config.END_DATE
 UNIT_SYSTEM = config.UNIT_SYSTEM
 # find the first data entry automatically
 FIND_FIRST_DATE = config.FIND_FIRST_DATE
-
+folder_name = 'csv'
 
 def scrap_station(weather_station_url):
 
     session = requests.Session()
     timeout = 5
+    sleeptime = 5
     global START_DATE
     global END_DATE
     global UNIT_SYSTEM
     global FIND_FIRST_DATE
 
+    start_date_tmp=START_DATE
     if FIND_FIRST_DATE:
         # find first date
-        first_date_with_data = Utils.find_first_data_entry(weather_station_url=weather_station_url, start_date=START_DATE)
+        first_date_with_data = Utils.find_first_data_entry(weather_station_url=weather_station_url, start_date=start_date_tmp)
         # if first date found
         if(first_date_with_data != -1):
-            START_DATE = first_date_with_data
+            start_date_tmp = first_date_with_data
     
-    url_gen = Utils.date_url_generator(weather_station_url, START_DATE, END_DATE)
+    url_gen = Utils.date_url_generator(weather_station_url, start_date_tmp, END_DATE)
     station_name = weather_station_url.split('/')[-1]
-    file_name = f'{station_name}.csv'
+    # file_name = f'{station_name}.csv'
+    file_name = folder_name+'/'+station_name+'.csv'
 
     with open(file_name, 'a+', newline='') as csvfile:
         fieldnames = ['Date', 'Time',	'Temperature',	'Dew_Point',	'Humidity',	'Wind',	'Speed',	'Gust',	'Pressure',	'Precip_Rate',	'Precip_Accum',	'UV',   'Solar']
@@ -63,11 +63,15 @@ def scrap_station(weather_station_url):
                 print(f'Scraping data from {url}')
                 history_table = False
                 while not history_table:
-                    html_string = session.get(url, timeout=timeout)
-                    doc = lh.fromstring(html_string.content)
-                    history_table = doc.xpath('//*[@id="main-page-content"]/div/div/div/lib-history/div[2]/lib-history-table/div/div/div/table/tbody')
-                    if not history_table:
+                    try:
+                        html_string = session.get(url, timeout=timeout)
+                        doc = lh.fromstring(html_string.content)
+                        history_table = doc.xpath('//*[@id="main-page-content"]/div/div/div/lib-history/div[2]/lib-history-table/div/div/div/table/tbody')
+                    except requests.exceptions.Timeout as e:
+                        print(e)
+                        history_table = False
                         print("refreshing session")
+                        time.sleep(sleeptime)
                         session = requests.Session()
 
                 # parse html table rows
@@ -79,12 +83,13 @@ def scrap_station(weather_station_url):
                     
                 print(f'Saving {len(data_to_write)} rows')
                 writer.writerows(data_to_write)
+                csvfile.flush()
             except Exception as e:
                 print(e)
 
 
-
-for url in URLS:
-    url = url.strip()
-    print(url)
-    scrap_station(url)
+if __name__ == '__main__':
+    for i, url in enumerate(URLS):
+        url = url.strip()
+        print(url)
+        scrap_station(url)
